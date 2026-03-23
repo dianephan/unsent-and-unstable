@@ -1,0 +1,246 @@
+/* === Pride and Prejudice and Feature Flags === */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    --parchment: #f5f0e8;
+    --parchment-dark: #e8e0d0;
+    --ink: #3d2b1f;
+    --gold: #b8860b;
+    --red: #8b0000;
+    --green: #2e7d32;
+    --terminal-bg: #1a1a1a;
+    --terminal-text: #c0c0c0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    background-color: var(--parchment);
+    color: var(--ink);
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 12rem;
+}
+
+/* --- Header --- */
+header {
+    text-align: center;
+    padding: 3rem 0 2rem;
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 2.5rem;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+header .subtitle {
+    font-style: italic;
+    color: var(--gold);
+    font-size: 1.1rem;
+}
+
+/* --- Chapter Cards --- */
+.chapter-card {
+    position: relative;
+    background: white;
+    border: 1px solid var(--parchment-dark);
+    border-radius: 4px;
+    padding: 2rem 2rem 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 4px rgba(61, 43, 31, 0.08);
+}
+
+.chapter-card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.3rem;
+    color: var(--ink);
+}
+
+.chapter-card .engineering-concept {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-family: Georgia, serif;
+}
+
+.chapter-card .scene {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.chapter-card .quote {
+    font-style: italic;
+    color: #6b5744;
+    border-left: 3px solid var(--gold);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+}
+
+/* --- Flag Badge --- */
+.flag-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.7rem;
+    background: var(--parchment);
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid var(--parchment-dark);
+}
+
+.flag-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.flag-dot.on { background-color: var(--green); }
+.flag-dot.off { background-color: var(--red); }
+.flag-dot.flaky {
+    background-color: var(--gold);
+    animation: flicker 1.5s ease-in-out infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { background-color: var(--green); }
+    50% { background-color: var(--red); }
+}
+
+/* --- Test indicator on card --- */
+.test-indicator {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 3px;
+    margin-top: 1rem;
+    background: var(--parchment);
+    border: 1px solid var(--parchment-dark);
+}
+
+.test-indicator.passed { border-left: 3px solid var(--green); }
+.test-indicator.failed { border-left: 3px solid var(--red); }
+.test-indicator.skipped { border-left: 3px solid var(--gold); }
+
+.test-indicator .status {
+    font-weight: bold;
+}
+
+.test-indicator .status.passed { color: var(--green); }
+.test-indicator .status.failed { color: var(--red); }
+.test-indicator .status.skipped { color: var(--gold); }
+
+/* --- Chaos details --- */
+.chaos-list {
+    list-style: none;
+    margin: 1rem 0;
+    padding: 0;
+}
+
+.chaos-list li {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    padding: 0.3rem 0;
+    color: var(--red);
+}
+
+.chaos-list li::before {
+    content: "\2718 ";
+    color: var(--red);
+}
+
+/* --- Test Dashboard (Chapter V) --- */
+.test-dashboard {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--terminal-bg);
+    color: var(--terminal-text);
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.8rem;
+    padding: 1rem 0;
+    border-top: 3px solid var(--gold);
+    z-index: 100;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.test-dashboard .dashboard-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.test-dashboard h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--gold);
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+}
+
+.test-line {
+    padding: 0.25rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.test-line .icon { margin-right: 0.5rem; }
+.test-line.passed .icon { color: var(--green); }
+.test-line.failed .icon { color: var(--red); }
+.test-line.skipped .icon { color: var(--gold); }
+
+.test-line.passed .name { color: var(--green); }
+.test-line.failed .name { color: var(--red); }
+.test-line.skipped .name { color: var(--gold); }
+
+.test-line .detail {
+    color: #808080;
+    margin-left: 0.5rem;
+}
+
+.test-summary {
+    margin-top: 0.8rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid #333;
+    font-size: 0.85rem;
+}
+
+.test-summary .passed-count { color: var(--green); }
+.test-summary .failed-count { color: var(--red); }
+.test-summary .skipped-count { color: var(--gold); }
+.test-summary .flaky-count { color: var(--gold); }
+
+.refresh-hint {
+    color: #555;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+    font-family: 'Playfair Display', Georgia, serif;
+}

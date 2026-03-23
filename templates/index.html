@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsent and Unstable</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Unsent and Unstable</h1>
+            <p class="subtitle">A love story between test automation and deployment chaos</p>
+        </header>
+
+        {# --- Chapter I: The Letter --- #}
+        <div class="chapter-card">
+            <div class="flag-badge">
+                <span class="flag-dot {{ 'on' if letter.flag_state else 'off' }}"></span>
+                luv-letter-delivery
+            </div>
+            <h2>{{ letter.title }}</h2>
+            <div class="engineering-concept">Missing flag coverage</div>
+            <p class="scene">{{ letter.scene }}</p>
+            <blockquote class="quote">{{ letter.quote }}</blockquote>
+            <div class="test-indicator {{ letter.test_status|lower }}">
+                <span class="status {{ letter.test_status|lower }}">{{ letter.test_status }}</span>
+                &mdash; {{ letter.test_detail }}
+            </div>
+        </div>
+
+        {# --- Chapter II: The Proposal --- #}
+        <div class="chapter-card">
+            <div class="flag-badge">
+                <span class="flag-dot {{ 'on' if proposal.flag_state else 'off' }}"></span>
+                luv-proposal-style
+            </div>
+            <h2>{{ proposal.title }}</h2>
+            <div class="engineering-concept">Failed code review</div>
+            <p class="scene">{{ proposal.scene }}</p>
+            <blockquote class="quote">{{ proposal.quote }}</blockquote>
+            <div class="test-indicator {{ proposal.test_status|lower }}">
+                <span class="status {{ proposal.test_status|lower }}">{{ proposal.test_status }}</span>
+                &mdash; {{ proposal.test_detail }}
+            </div>
+        </div>
+
+        {# --- Chapter III: The Flaky Invitation --- #}
+        <div class="chapter-card">
+            <div class="flag-badge">
+                <span class="flag-dot flaky"></span>
+                luv-ball-invitation
+            </div>
+            <h2>{{ invitation.title }}</h2>
+            <div class="engineering-concept">Flaky tests</div>
+            <p class="scene">{{ invitation.scene }}</p>
+            <blockquote class="quote">{{ invitation.quote }}</blockquote>
+            <div class="test-indicator {{ invitation.test_status|lower }}">
+                <span class="status {{ invitation.test_status|lower }}">{{ invitation.test_status }}</span>
+                &mdash; {{ invitation.test_detail }}
+            </div>
+        </div>
+
+        {# --- Chapter IV: Staging Chaos --- #}
+        <div class="chapter-card">
+            <div class="flag-badge">
+                <span class="flag-dot {{ 'on' if staging.flag_state else 'off' }}"></span>
+                luv-staging-chaos
+            </div>
+            <h2>{{ staging.title }}</h2>
+            <div class="engineering-concept">Chaotic staging environment</div>
+            <p class="scene">{{ staging.scene }}</p>
+            {% if staging.chaos_details %}
+            <ul class="chaos-list">
+                {% for detail in staging.chaos_details %}
+                <li>{{ detail }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <blockquote class="quote">{{ staging.quote }}</blockquote>
+            <div class="test-indicator {{ staging.test_status|lower }}">
+                <span class="status {{ staging.test_status|lower }}">{{ staging.test_status }}</span>
+                &mdash; {{ staging.test_detail }}
+            </div>
+        </div>
+    </div>
+
+    {# --- Chapter V: Test Results Dashboard --- #}
+    <div class="test-dashboard">
+        <div class="dashboard-inner">
+            <h3>Chapter V &mdash; The Test Results Dashboard</h3>
+            <div>
+                <span style="color: #808080;">$ pytest tests/test_regency.py -v</span>
+            </div>
+            <br>
+            {% for test in tests %}
+            <div class="test-line {{ test.status|lower }}">
+                {% if test.status == 'PASSED' %}
+                <span class="icon">&#10004;</span>
+                {% elif test.status == 'FAILED' %}
+                <span class="icon">&#10008;</span>
+                {% elif test.status == 'SKIPPED' %}
+                <span class="icon">&#9671;</span>
+                {% endif %}
+                <span class="name">{{ test.name }}</span>
+                <span class="detail">{{ test.detail }}</span>
+            </div>
+            {% endfor %}
+
+            <div class="test-summary">
+                ========
+                <span class="passed-count">{{ summary.split(',')[0] }}</span>,
+                <span class="failed-count">{{ summary.split(',')[1] }}</span>,
+                <span class="skipped-count">{{ summary.split(',')[2] }}</span>,
+                <span class="flaky-count">{{ summary.split(',')[3] }}</span>
+                ========
+            </div>
+            <p class="refresh-hint">Refresh the page to see the flaky invitation change &mdash; each load is a fresh coin flip.</p>
+        </div>
+    </div>
+</body>
+</html>
