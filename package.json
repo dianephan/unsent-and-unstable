@@ -1,0 +1,25 @@
+{
+  "name": "occ26",
+  "version": "1.0.0",
+  "description": "A demo web app that tells a love story between feature flags and test automation, inspired by love for romcoms. Letters, proposals, and invitations are controlled by LaunchDarkly feature flags — toggling them dramatizes real engineering pain: flaky tests, missing flag coverage, and chaotic staging environments, all through Regency-era emotional damage.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run",
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dianephan/unsent-and-unstable.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dianephan/unsent-and-unstable/issues"
+  },
+  "homepage": "https://github.com/dianephan/unsent-and-unstable#readme",
+  "devDependencies": {
+    "cypress": "^14.5.4",
+    "launchdarkly-cypress-plugin": "^1.0.1"
+  }
+}
