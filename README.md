@@ -2,6 +2,29 @@
 
 A demo web app that tells a love story between feature flags and test automation, inspired by love for romcoms. Letters, proposals, and invitations are controlled by LaunchDarkly feature flags — toggling them dramatizes real engineering pain: flaky tests, missing flag coverage, and chaotic staging environments, all through Regency-era emotional damage.
 
+## Feature Flags
+
+All flags are in the `diane-blog` project, tagged `luv`.
+
+| Flag Key | What it does | Toggle OFF to see... |
+|---|---|---|
+| `luv-letter-delivery` | Darcy's letter arrives | Missing test coverage (test SKIPPED) |
+| `luv-proposal-style` | Elegant proposal | Failed code review (test FAILED) |
+| `luv-ball-invitation` | 50/50 rollout — flaky by design | Refresh the page repeatedly to watch it flicker |
+| `luv-staging-chaos` | Staging environment chaos | Toggle ON to break everything hilariously |
+
+## Demo Scenarios
+
+| Scenario | How | What you'll see |
+|---|---|---|
+| Happy path | All flags ON (except staging-chaos) | Positive scenes, tests pass |
+| Letter missing | Toggle `luv-letter-delivery` OFF | Letter lost, test SKIPPED |
+| Bad proposal | Toggle `luv-proposal-style` OFF | Insulting proposal, test FAILED |
+| Flaky invitation | Refresh 10x | Ball invitation flickers PASSED/FAILED |
+| Staging chaos | Toggle `luv-staging-chaos` ON | Everything breaks simultaneously |
+| Maximum damage | All flags OFF | Sea of red in test dashboard |
+
+
 ## Setup
 
 ### 1. Install dependencies
