@@ -1,1 +1,2 @@
-import 'launchdarkly-cypress-plugin/support';
+import 'launchdarkly-cypress-plugin/lib/support';
+import './commands';

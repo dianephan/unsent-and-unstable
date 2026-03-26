@@ -7,13 +7,12 @@ module.exports = defineConfig({
     setupNodeEvents: async (on, config) => {
       config = await launchDarklyCypressPlugin(config, {
         sdkKey: config.env.PLUGIN_SDK_KEY,
-        flagKey: config.env.PLUGIN_FLAG_KEY,
+        flagKey: "luv-cypress-skip",
+        streamUri: 'https://stream.ld.catamorphic.com',
+        eventsUri: 'https://events.ld.catamorphic.com',
+        baseUri: 'https://app.ld.catamorphic.com'
       });
       return config;
-    },
-    env: {
-      PLUGIN_SDK_KEY: '',
-      PLUGIN_FLAG_KEY: '',
-    },
+    }
   },
 });
