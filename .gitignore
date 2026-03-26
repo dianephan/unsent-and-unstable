@@ -2,3 +2,7 @@
 plan.md
 __pycache__/
 READMEdraft.md
+node_modules/
+cypress.env.json
+
+
