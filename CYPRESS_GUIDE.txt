@@ -1,0 +1,254 @@
+================================================================================
+  CYPRESS TEST GUIDE — Unsent and Unstable
+================================================================================
+
+OVERVIEW
+--------
+This project has 5 Cypress E2E tests (one per chapter) that visit the running
+Flask app and verify the UI renders correctly. On top of that, the
+launchdarkly-cypress-plugin connects to LaunchDarkly so you can skip any test
+remotely by toggling a feature flag — no code changes needed.
+
+There are two layers of flags at play:
+
+  1. APP FLAGS  — control what the Flask app renders (the story content)
+  2. TEST FLAG  — controls which Cypress tests run or get skipped
+
+
+================================================================================
+  THE STORY
+================================================================================
+
+This app retells Pride and Prejudice as a software engineering disaster. Each
+chapter is a scene from the novel mapped to a real testing failure mode. The
+LaunchDarkly feature flags control which version of each scene appears — the
+happy path or the broken one.
+
+  CHAPTER I — The Letter (flag: luv-letter-delivery)
+  ───────────────────────────────────────────────────
+  Darcy writes Elizabeth a letter explaining himself after she rejects him.
+  In the story, the letter is the turning point — it changes everything.
+
+  In software terms, this chapter represents MISSING FLAG COVERAGE.
+  If the letter was never delivered (flag OFF), no test was written for the
+  postal service. The feature silently fails. Elizabeth never learns the truth.
+
+  FLAG ON:  "Darcy's letter arrives at Longbourn. Elizabeth reads it by
+             candlelight, and for the first time, understands his true character."
+  FLAG OFF: "The letter was never delivered. No one wrote a test for the postal
+             service. The flag has no coverage, so the feature silently fails."
+
+  The Cypress test asserts the flag-ON narrative — Darcy's letter arrived.
+  It checks for "Darcy's letter arrives at Longbourn" in the scene and
+  "selfish being all my life" in the quote (his famous confession). If you
+  toggle luv-letter-delivery OFF, this Cypress test will FAIL — demonstrating
+  what happens when flag coverage is missing.
+
+
+  CHAPTER II — The Proposal (flag: luv-proposal-style)
+  ──────────────────────────────────────────────────────
+  Darcy proposes to Elizabeth twice. The first proposal (Hunsford) is arrogant
+  and insulting to her family — it fails spectacularly. The second (Pemberley)
+  is humble, refactored, and accepted.
+
+  In software terms, this chapter represents a FAILED CODE REVIEW.
+  The first proposal is a pull request with 47 comments, all requesting changes.
+
+  FLAG ON:  "At Pemberley, Darcy approaches Elizabeth with humility. His second
+             proposal is elegant, refactored, and well-tested."
+             Quote: "You are too generous to trifle with me."
+  FLAG OFF: "At Hunsford, Darcy delivers his first proposal. It is arrogant,
+             untested, and riddled with insults to Elizabeth's family."
+             Quote: "In vain I have struggled."
+
+  The Cypress test asserts the flag-ON narrative — the elegant Pemberley
+  proposal. It checks for "Pemberley" in the scene and "too generous to trifle"
+  in the quote. Toggle luv-proposal-style OFF to see it fail.
+
+
+  CHAPTER III — The Flaky Invitation (flag: luv-ball-invitation)
+  ───────────────────────────────────────────────────────────────
+  An invitation to the Netherfield Ball is sent via footman. Sometimes he
+  delivers it. Sometimes he stops at the pub. This is a 50/50 random rollout
+  — the flag evaluates against a random UUID context on every page load.
+
+  In software terms, this chapter IS the flaky test. It passes sometimes and
+  fails sometimes with no code change. Refreshing the page is a coin flip.
+
+  FLAG ON  (sometimes): "The footman delivers the invitation to the Netherfield
+                          Ball. The Bennet household erupts in excitement."
+  FLAG OFF (sometimes): "The footman stopped at the pub. The invitation never
+                          arrived. Mrs. Bennet blames Mr. Bennet, who is reading."
+
+  The Cypress test uses keywords present in BOTH outcomes:
+    - "footman" appears in both scene texts
+    - "invitation.delivered" appears in both test indicator strings
+    - The flag dot always has class "flaky" (gold, flickering animation)
+  This test stays green regardless of the coin flip — the flakiness is in the
+  story, not in the Cypress assertion.
+
+
+  CHAPTER IV — The Staging Environment (flag: luv-staging-chaos)
+  ────────────────────────────────────────────────────────────────
+  The staging environment has either drifted catastrophically from production,
+  or it is — for now — at peace.
+
+  In software terms, this chapter represents STAGING DRIFT. When chaos is ON,
+  Mr. Collins has somehow married Mr. Darcy, the Ball is in a Kubernetes pod
+  nobody can find, and Lady Catherine is returning 503 errors.
+
+  FLAG ON:  "The staging environment has drifted catastrophically from
+             production. Mr. Collins has married Mr. Darcy."
+  FLAG OFF: "The staging environment is currently at peace. All services are
+             responding. The data is consistent. This will not last."
+
+  The Cypress test uses keywords present in BOTH outcomes:
+    - "staging environment" appears in both scene texts
+    - "staging" appears in both test indicator strings
+    - The quote element always exists (different content per state)
+  This means the Cypress test passes whether chaos is on or off. To make it
+  flag-sensitive, assert specific content like "drifted catastrophically".
+
+
+  CHAPTER V — The Test Results Dashboard (no app flag)
+  ──────────────────────────────────────────────────────
+  A terminal-style pytest output panel showing the results of all four chapters
+  as if they were a real test suite (test_regency.py). It always renders 4
+  test result rows — one per chapter — and a summary line.
+
+  The Cypress test verifies the dashboard structure:
+    - "Chapter V" heading is present
+    - The pytest command line is shown ("pytest tests/test_regency.py")
+    - Exactly 4 .test-line rows exist
+    - A .test-summary element exists
+
+
+================================================================================
+  TEST ASSERTIONS AT A GLANCE
+================================================================================
+
+  Chapter I - The Letter
+    scene contains       "Darcy's letter arrives at Longbourn"   (flag ON only)
+    quote contains       "selfish being all my life"              (flag ON only)
+    test-indicator has   "letter.delivered"                       (flag ON only)
+
+  Chapter II - The Proposal
+    scene contains       "Pemberley"                              (flag ON only)
+    quote contains       "too generous to trifle"                 (flag ON only)
+    test-indicator has   "proposal.response"                      (flag ON only)
+
+  Chapter III - The Flaky Invitation
+    scene contains       "footman"                                (both states)
+    test-indicator has   "invitation.delivered"                   (both states)
+    flag-dot has class   "flaky"                                  (always)
+
+  Chapter IV - The Staging Environment
+    scene contains       "staging environment"                    (both states)
+    test-indicator has   "staging"                                (both states)
+    quote               exists                                    (always)
+
+  Chapter V - The Test Results Dashboard
+    h3 contains          "Chapter V"                              (always)
+    pytest command       exists                                    (always)
+    .test-line count     4                                        (always)
+    .test-summary        exists                                    (always)
+
+
+================================================================================
+  HOW THE FLAGS WORK
+================================================================================
+
+APP FLAGS (control what you see on the page)
+────────────────────────────────────────────
+These are evaluated server-side in app.py. They change the story content.
+
+  FLAG KEY                WHEN ON                         WHEN OFF
+  ──────────────────────  ──────────────────────────────  ──────────────────────
+  luv-letter-delivery     Letter arrives, test PASSED     Letter lost, test SKIPPED
+  luv-proposal-style      Elegant proposal, test PASSED   Bad proposal, test FAILED
+  luv-ball-invitation     50/50 random each page load     50/50 random (flaky!)
+  luv-staging-chaos       Chaos mode, test FAILED         Stable staging, test PASSED
+
+Chapters I and II assert flag-ON content — toggling those flags OFF will cause
+the Cypress tests to fail. Chapters III and IV use content that appears in both
+states, so they stay green regardless of flag position.
+
+
+TEST FLAG (controls which Cypress tests run)
+────────────────────────────────────────────
+  FLAG KEY: luv-cypress-skip
+
+This is the flag the launchdarkly-cypress-plugin evaluates. It uses a special
+"cypress" context kind with two attributes:
+
+  - suite  = the describe() block name   (e.g. "Unsent and Unstable")
+  - test   = the it() block name         (e.g. "Chapter III - The Flaky Invitation")
+
+When luv-cypress-skip evaluates to TRUE for a given test context, that test
+is SKIPPED (it won't run). When FALSE (the default), the test runs normally.
+
+
+================================================================================
+  WHAT YOU CAN CHANGE
+================================================================================
+
+1. SKIP A SPECIFIC TEST FROM LAUNCHDARKLY
+   Go to LaunchDarkly > diane-blog > luv-cypress-skip
+   Add a targeting rule:
+     Context kind: cypress
+     Attribute: test
+     Operator: is one of
+     Value: "Chapter III - The Flaky Invitation"
+     Serve: true
+   Save. Now that test will be skipped on the next Cypress run.
+
+2. SKIP ALL TESTS IN THE SUITE
+   Same flag, but target by:
+     Attribute: suite
+     Value: "Unsent and Unstable"
+     Serve: true
+
+3. TOGGLE APP FLAGS TO BREAK CHAPTERS I AND II
+   Turn OFF luv-letter-delivery  → Chapter I Cypress test FAILS (scene text changes)
+   Turn OFF luv-proposal-style   → Chapter II Cypress test FAILS (scene text changes)
+   Turn ON  luv-staging-chaos    → Chapter IV still passes (both states have "staging")
+
+4. ADD A NEW TEST
+   Add another it() block in the describe:
+
+     it('Page title is correct', () => {
+       cy.title().should('eq', 'Unsent and Unstable');
+     });
+
+   This test will also be controllable via luv-cypress-skip targeting.
+
+
+================================================================================
+  HOW TO RUN
+================================================================================
+
+  # Terminal 1: start the Flask app
+  flask run
+
+  # Terminal 2: run Cypress
+  npm test                     # headless (same as npx cypress run)
+  npx cypress run              # headless (CI-friendly)
+  npx cypress open             # interactive UI (for development)
+
+  # Run only one test while editing
+  # Add .only to the it() block:
+  it.only('Chapter I - The Letter', () => { ... })
+
+  # Debug the plugin connection
+  DEBUG=ld-plugin npx cypress run
+
+
+================================================================================
+  FILES
+================================================================================
+
+  cypress.config.js                      Plugin setup — connects to LaunchDarkly
+  cypress/support/e2e.js                 Imports plugin support + custom commands
+  cypress/support/commands.js            Place for custom cy.* commands
+  cypress/e2e/unsent-and-unstable.cy.js  The 5 test cases
+  cypress.env.json                       SDK key (gitignored, you create this)

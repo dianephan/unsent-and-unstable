@@ -68,13 +68,24 @@ Create a `cypress.env.json` in the project root (gitignored):
 
 The `luv-cypress-skip` flag is a boolean flag in the `diane-blog` project. When it evaluates to `true` for a given test context, that test is **skipped**.
 
-### 3. Run the tests
+### 3. Run the tests headless
 
-Make sure the Flask app is running (`flask run`), then:
+`cypress.env.json` is gitignored, so it **lives only on disk and is never touched by git**. It persists safely across branch switches — you only need to create it once.
+
+Make sure the Flask app is running (`flask run`), then run the tests headless:
 
 ```bash
-npx cypress run        # headless
-npx cypress open       # interactive UI
+npm test
+# or equivalently:
+npx cypress run
+```
+
+Cypress runs headless by default with `cypress run`. Test results, pass/fail status, and any errors print directly to the terminal. Videos are saved to `cypress/videos/` (also gitignored).
+
+To open the interactive Cypress UI instead:
+
+```bash
+npm run cypress:open
 ```
 
 ### 4. Control test skipping from LaunchDarkly
