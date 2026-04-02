@@ -1,3 +1,4 @@
+import json
 import os
 import uuid
 from dotenv import load_dotenv
@@ -13,10 +14,12 @@ app = Flask(__name__)
 
 # Initialize LaunchDarkly
 sdk_key = os.environ.get("LAUNCHDARKLY_SDK_KEY")
+print(f"sdk_key: {sdk_key}")
 if not sdk_key:
     raise RuntimeError("Set LAUNCHDARKLY_SDK_KEY environment variable")
 
-config = Config(sdk_key)
+config = Config(sdk_key, base_uri=os.environ.get("LAUNCHDARKLY_BASE_URI"), stream_uri=os.environ.get("LAUNCHDARKLY_STREAM_URI"), events_uri=os.environ.get("LAUNCHDARKLY_EVENTS_URI"))
+
 ldclient.set_config(config)
 ld_client = ldclient.get()
 
@@ -166,9 +169,24 @@ def evaluate_flags():
     }
 
 
+RESULTS_FILE = os.path.join(os.path.dirname(__file__), 'cypress-results.json')
+
+
+def load_cypress_results():
+    """Load real Cypress test results from JSON file, if it exists."""
+    if not os.path.exists(RESULTS_FILE):
+        return None
+    try:
+        with open(RESULTS_FILE, 'r') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return None
+
+
 @app.route("/")
 def index():
     data = evaluate_flags()
+    data['cypress_results'] = load_cypress_results()
     return render_template("index.html", **data)
 
 
