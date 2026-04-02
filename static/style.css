@@ -30,7 +30,7 @@ body {
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem 1.5rem 12rem;
+    padding: 2rem 1.5rem 2rem;
 }
 
 /* --- Header --- */
@@ -175,19 +175,12 @@ header .subtitle {
 
 /* --- Test Dashboard (Chapter V) --- */
 .test-dashboard {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background: var(--terminal-bg);
     color: var(--terminal-text);
     font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
     font-size: 0.8rem;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
     border-top: 3px solid var(--gold);
-    z-index: 100;
-    max-height: 40vh;
-    overflow-y: auto;
 }
 
 .test-dashboard .dashboard-inner {
@@ -243,4 +236,31 @@ header .subtitle {
     margin-top: 0.5rem;
     font-style: italic;
     font-family: 'Playfair Display', Georgia, serif;
+}
+
+.refresh-hint code {
+    color: var(--terminal-text);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-style: normal;
+}
+
+.command-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timestamp {
+    color: #555;
+    font-size: 0.7rem;
+}
+
+.no-results {
+    padding: 1rem 0;
+    line-height: 2;
+}
+
+.no-results code {
+    color: var(--terminal-text);
+    font-family: 'SF Mono', 'Fira Code', monospace;
 }

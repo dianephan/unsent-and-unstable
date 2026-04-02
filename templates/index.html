@@ -85,37 +85,49 @@
         </div>
     </div>
 
-    {# --- Chapter V: Test Results Dashboard --- #}
+    {# --- Chapter V: Test Results Dashboard (real Cypress results) --- #}
     <div class="test-dashboard">
         <div class="dashboard-inner">
             <h3>Chapter V &mdash; The Test Results Dashboard</h3>
-            <div>
-                <span style="color: #808080;">$ pytest tests/test_regency.py -v</span>
+
+            {% if cypress_results %}
+            <div class="command-line">
+                <span style="color: #808080;">$ npx cypress run</span>
+                <span class="timestamp">{{ cypress_results.timestamp[:19] }}</span>
             </div>
             <br>
-            {% for test in tests %}
-            <div class="test-line {{ test.status|lower }}">
-                {% if test.status == 'PASSED' %}
+            {% for test in cypress_results.tests %}
+            <div class="test-line {{ test.state }}">
+                {% if test.state == 'passed' %}
                 <span class="icon">&#10004;</span>
-                {% elif test.status == 'FAILED' %}
+                {% elif test.state == 'failed' %}
                 <span class="icon">&#10008;</span>
-                {% elif test.status == 'SKIPPED' %}
+                {% elif test.state == 'skipped' %}
                 <span class="icon">&#9671;</span>
                 {% endif %}
-                <span class="name">{{ test.name }}</span>
-                <span class="detail">{{ test.detail }}</span>
+                <span class="name">{{ test.displayName }}</span>
+                <span class="detail">{{ test.duration }}ms</span>
             </div>
             {% endfor %}
 
             <div class="test-summary">
                 ========
-                <span class="passed-count">{{ summary.split(',')[0] }}</span>,
-                <span class="failed-count">{{ summary.split(',')[1] }}</span>,
-                <span class="skipped-count">{{ summary.split(',')[2] }}</span>,
-                <span class="flaky-count">{{ summary.split(',')[3] }}</span>
+                <span class="passed-count">{{ cypress_results.totalPassed }} passed</span>,
+                <span class="failed-count">{{ cypress_results.totalFailed }} failed</span>,
+                <span class="skipped-count">{{ cypress_results.totalSkipped }} skipped</span>
                 ========
             </div>
-            <p class="refresh-hint">Refresh the page to see the flaky invitation change &mdash; each load is a fresh coin flip.</p>
+            <p class="refresh-hint">Run <code>npx cypress run</code> then refresh to update results.</p>
+
+            {% else %}
+            <div class="no-results">
+                <span style="color: #808080;">$ npx cypress run</span>
+                <br><br>
+                <span style="color: var(--gold);">No Cypress results yet.</span>
+                <br>
+                <span style="color: #808080;">Run <code>npx cypress run</code> in another terminal, then refresh this page.</span>
+            </div>
+            {% endif %}
         </div>
     </div>
 </body>
