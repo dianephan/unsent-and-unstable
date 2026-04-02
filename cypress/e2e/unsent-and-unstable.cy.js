@@ -66,15 +66,14 @@ describe('Unsent and Unstable', () => {
     });
   });
 
-  // No app flag controls this chapter — it always renders all 4 test results.
-  // Verifies the terminal-style dashboard is present with the pytest command,
-  // one result row per chapter, and a summary line.
+  // Chapter V shows real Cypress results from the previous run (written by
+  // after:run to cypress-results.json, read by Flask on page load). During
+  // this Cypress run, the page shows the *previous* run's data or "no results
+  // yet" — so we only check the dashboard structure, not specific counts.
   it('Chapter V - The Test Results Dashboard', () => {
     cy.get('.test-dashboard').within(() => {
       cy.get('h3').should('contain', 'Chapter V');
-      cy.contains('pytest tests/test_regency.py').should('exist');
-      cy.get('.test-line').should('have.length', 4);
-      cy.get('.test-summary').should('exist');
+      cy.get('.dashboard-inner').should('exist');
     });
   });
 });
