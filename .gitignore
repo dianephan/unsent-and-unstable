@@ -4,5 +4,7 @@ __pycache__/
 READMEdraft.md
 node_modules/
 cypress.env.json
+playwright/screenshot-metadata.json
+test-results/
 
 
