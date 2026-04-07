@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-04-03T15:58:53.563Z",
+  "totalPassed": 0,
+  "totalFailed": 0,
+  "totalSkipped": 5,
+  "totalTests": 5,
+  "tests": [
+    {
+      "title": "Unsent and Unstable > Chapter I - The Letter",
+      "displayName": "Chapter I - The Letter",
+      "state": "skipped",
+      "duration": 0
+    },
+    {
+      "title": "Unsent and Unstable > Chapter II - The Proposal",
+      "displayName": "Chapter II - The Proposal",
+      "state": "skipped",
+      "duration": 0
+    },
+    {
+      "title": "Unsent and Unstable > Chapter III - The Flaky Invitation",
+      "displayName": "Chapter III - The Flaky Invitation",
+      "state": "skipped",
+      "duration": 0
+    },
+    {
+      "title": "Unsent and Unstable > Chapter IV - The Staging Environment",
+      "displayName": "Chapter IV - The Staging Environment",
+      "state": "skipped",
+      "duration": 0
+    },
+    {
+      "title": "Unsent and Unstable > Chapter V - The Test Results Dashboard",
+      "displayName": "Chapter V - The Test Results Dashboard",
+      "state": "skipped",
+      "duration": 0
+    }
+  ]
+}
