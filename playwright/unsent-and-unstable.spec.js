@@ -37,6 +37,23 @@ test.describe('Unsent and Unstable - Screenshots', () => {
     });
   });
 
+  // Reload the page multiple times to capture both states of the flaky
+  // 50/50 rollout. Each load gets a fresh random context, so the invitation
+  // either arrives or gets lost. Saves each as a separate numbered screenshot.
+  test('Chapter III - Flaky rollout captures', async ({ page }) => {
+    for (let i = 1; i <= 5; i++) {
+      await page.goto('/');
+      await page.waitForLoadState('networkidle');
+      const card = page.locator('.chapter-card').nth(2);
+      const title = await card.locator('h2').textContent();
+      const state = title.includes('Arrived') ? 'arrived' : 'lost';
+      console.log(`  Flaky shot ${i}: ${state} — "${title}"`);
+      await takeScreenshotForDocs(card, `chapter-3-flaky-${i}-${state}.png`, {
+        padding: { top: 10, bottom: 10, left: 10, right: 10 },
+      });
+    }
+  });
+
   test('Chapter IV - The Staging Environment', async ({ page }) => {
     const card = page.locator('.chapter-card').nth(3);
     await expect(card.locator('h2')).toContainText('Chapter IV');
